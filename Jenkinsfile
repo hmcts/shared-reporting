@@ -1,3 +1,7 @@
+#!groovy
+
+@Library("Infrastructure")
+
 pipeline {
     agent {
         docker {
