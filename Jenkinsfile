@@ -1,16 +1,12 @@
 #!groovy
 
 pipeline {
-    agent {
-        docker {
-            image 'microsoft/mssql-tools'
-            args '-v ./sql:/root/'
-        }
-    }
     stages {
         stage('Run Query') {
             steps {
-                sh 'sqlcmd -U user -L password  -i /root/query.sql'
+                sh "docker pull microsoft/mssql-tools"
+                sh "docker run -it microsoft/mssql-tools --name mssql"
+                sh "docker exec -it mssql /opt/mssql-tools/bin/sqlcmd -U user -L password  -i /root/query.sql" 
             }
         }
     }
