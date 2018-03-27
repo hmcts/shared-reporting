@@ -8,13 +8,13 @@ pipeline {
                 step('Get MS SQL Tools Image) {
                     sh "docker pull microsoft/mssql-tools"
                 },
-                step('Get MS SQL Tools Image) {
+                step('Run MS SQL Tools Container) {
                     sh "docker run microsoft/mssql-tools --name mssql"
-                }
-                step('Get MS SQL Tools Image) {
+                },
+                step('Execute Query) {
                     sh "docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -U user -L password  -i /root/query.sql"
-                }
-                step('Get MS SQL Tools Image) {
+                },
+                step('Stop MS SQL Tools Container) {
                     sh "docker stop mssql"
                 } 
             }
