@@ -1,6 +1,7 @@
 #!groovy
 
 pipeline {
+    agent any
     stages {
         stage('Run Query') {
             steps {
