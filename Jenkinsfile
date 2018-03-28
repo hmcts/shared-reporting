@@ -9,10 +9,10 @@ node {
         // Requires Credential setup (MyCredentialID)
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                sh "docker stop mssql"
-                sh "docker rm mssql"
-                sh "docker pull microsoft/mssql-tools"
-                sh "docker run --name mssql -v ${WORKSPACE}:/root microsoft/mssql-tools /opt/mssql-tools/bin/sqlcmd -U '${USERNAME}' -P '${PASSWORD}' -H ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com  -i /root/sql/query.sql"
+                sh "docker stop psql-client"
+                sh "docker rm psql-client"
+                sh "docker pull jbergknoff/postgresql-client"
+                sh "docker run --name psql-client -v ${WORKSPACE}:/root jbergknoff/postgresql-client psql -U '${USERNAME}' -W '${PASSWORD}' -h ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com -p 5432  -f /root/sql/query.sql -L /root/result "
         }
     }
 }
