@@ -16,7 +16,7 @@ node {
         }
     }
     stage('Email Report') {
-        sh "echo 'Please find the report attached.'| mail -s 'Shared Reporting Output' -a 'report.txt' -r 'noreply@reform.hmcts.net (Shared Reporting)' Alliu.Balogun@HMCTS.NET James.Johnson@HMCTS.NET"       
+        sh "echo 'Please find the report attached.'| mail -s 'Shared Reporting Output' -a '${WORKSPACE}/report.txt' -r 'noreply@reform.hmcts.net (Shared Reporting)' Alliu.Balogun@HMCTS.NET James.Johnson@HMCTS.NET"       
     }
     stage('Cleanup') {
         sh "docker stop pgclient"
