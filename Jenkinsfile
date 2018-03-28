@@ -1,18 +1,24 @@
 @Library('Infrastructure') _
 
 node {
+    environment {
+     PSQL_CMD = "psql -U '${USERNAME}' -h ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com -p 5432  -f /root/sql/query.sql -L /root/result "
+    }
     stage('Checkout') {
       deleteDir()
       checkout scm
     }
-    stage('GetUserCredential') {
-        // Requires Credential setup (MyCredentialID)
+    stage('Setup') {
+        sh "docker pull jbergknoff/postgresql-client"
+    }
+    stage('Run Query') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                sh "docker pull jbergknoff/postgresql-client"
-                sh "docker run --name psqlclient -env PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client psql -U '${USERNAME}' -h ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com -p 5432  -f /root/sql/query.sql -L /root/result "
-                sh "docker stop psqlclient"
-                sh "docker rm psqlclient"
+            sh "docker run --name pgclient -env PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client ${PSQL_CMD}"
         }
+    }
+    stage('Cleanup') {
+        sh "docker stop pgclient"
+        sh "docker rm pgclient"
     }
 }
