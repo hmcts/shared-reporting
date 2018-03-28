@@ -14,7 +14,7 @@ node {
     stage('Run Query') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            sh "docker run --name pgclient --env PGCOMMAND=$PSQL_CMD -env PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client $PGCOMMAND"
+            sh "docker run --name pgclient --env PGCOMMAND=${PSQL_CMD} -env PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client $PGCOMMAND"
         }
     }
     stage('Cleanup') {
