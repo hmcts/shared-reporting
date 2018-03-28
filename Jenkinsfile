@@ -12,7 +12,7 @@ node {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             sh """docker run --name pgclient -e PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client \
-            postgresql://${USERNAME}:${PASSWORD}@ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com:5432/postgres  -f /root/sql/query.sql -L /root/result"""
+            -f /root/sql/query.sql -L /root/result -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com"""
         }
     }
     stage('Cleanup') {
