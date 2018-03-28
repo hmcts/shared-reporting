@@ -12,7 +12,7 @@ node {
                 sh "docker stop psql-client"
                 sh "docker rm psql-client"
                 sh "docker pull jbergknoff/postgresql-client"
-                sh "docker run --name psql-client -v ${WORKSPACE}:/root jbergknoff/postgresql-client -e PGPASSWORD=${PASSWORD} psql -U '${USERNAME}' -h ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com -p 5432  -f /root/sql/query.sql -L /root/result "
+                sh "docker run --name psql-client -env PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client psql -U '${USERNAME}' -h ccd-data-store-api-data-store-aat-midb.postgres.database.azure.com -p 5432  -f /root/sql/query.sql -L /root/result "
                 sh "docker stop psql-client"
                 sh "docker rm psql-client"
         }
