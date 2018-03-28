@@ -1,6 +1,9 @@
 @Library('Infrastructure') _
 
 node {
+    triggers {
+        cron('30 08 * * *')
+    }
     stage('Checkout') {
       deleteDir()
       checkout scm
