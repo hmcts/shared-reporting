@@ -1,15 +1,18 @@
-#!groovy
+@Library('Infrastructure') _
 
-pipeline {
-    agent any
-    stages {
-        stage('Run Query') {
-            steps {
-                sh "docker pull microsoft/mssql-tools"
-                sh "docker run microsoft/mssql-tools --name mssql"
-                sh "docker exec -i mssql /opt/mssql-tools/bin/sqlcmd -U user -L password  -i /root/query.sql"
+node {
+    stage('Checkout') {
+      deleteDir()
+      checkout scm
+    }
+    stage('GetUserCredential') {
+        // Requires Credential setup (MyCredentialID)
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 sh "docker stop mssql"
-            }
+                sh "docker rm mssql"
+                sh "docker pull microsoft/mssql-tools"
+                sh "docker run --name mssql -v ${WORKSPACE}:/root microsoft/mssql-tools /opt/mssql-tools/bin/sqlcmd -U '${USERNAME}' -P '${PASSWORD}'  -i /root/sql/query.sql"
         }
     }
 }
