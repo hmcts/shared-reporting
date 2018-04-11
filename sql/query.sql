@@ -39,4 +39,4 @@ $BODY$
 LANGUAGE plpgsql VOLATILE
 COST 100;
 
-SELECT * from get_cmc_metrics('2018-01-18'::date);
+SELECT * from get_cmc_metrics('2018-03-02'::date);
