@@ -1,5 +1,7 @@
 @Library('Infrastructure') _
 
+properties([pipelineTriggers([cron('H 02 * * *')])])
+
 node {
     stage('Checkout') {
       deleteDir()
