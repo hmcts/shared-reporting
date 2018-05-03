@@ -12,8 +12,10 @@ node {
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             
             docker.image('jbergknoff/postgresql-client').withRun("--name pgclient -e PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root") { c ->
-                sh "psql -f /root/sql/query.sql -o /root/report1.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
-                sh "psql -f /root/sql/query.sql -o /root/report2.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
+                docker.image('jbergknoff/postgresql-client').inside() { c -> 
+                    sh "psql -f /root/sql/query.sql -o /root/report1.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
+                    sh "psql -f /root/sql/query.sql -o /root/report2.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
+                }
             }
         }
     }
