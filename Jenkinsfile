@@ -13,12 +13,10 @@ node {
     stage('Run Query') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            sh """docker run --name pgclient -e PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root jbergknoff/postgresql-client \
-            -f /root/sql/query.sql -o /root/report1.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"""
-                        
-            sh "docker start pgclient --attach"
-            sh "-f /root/sql/query.sql -o /root/report2.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
-            sh "exit"
+    docker.image('jbergknoff/postgresql-client').withRun('-e "--name pgclient -e PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root -f /root/sql/query.sql -o /root/report1.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com') { c ->
+        sh 'psql -f /root/sql/query.sql -o /root/report2.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com'
+    }
+
         }
     }
     stage('Email Report') {
