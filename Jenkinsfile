@@ -8,7 +8,7 @@ node {
       checkout scm
     }
     stage('Run Query') {    
-        def DIVORCE_METRICS_QUERY = "COPY ( SELECT * from get_divorce_metrics(\'yesterday\')) TO STDOUT WITH CSV HEADER"
+        def DIVORCE_METRICS_QUERY = "COPY SELECT * from get_divorce_metrics(\'yesterday\') TO STDOUT WITH CSV HEADER"
 
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
