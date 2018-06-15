@@ -9,7 +9,7 @@ node {
     }
     stage('Run Query') {    
         def DIVORCE_METRICS_QUERY = /SELECT * from case_data limit 2;/
-        def DB_HOST = /ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com/
+        def DB_HOST = /ccd-data-store-api-postgres-db-prod.postgres.database.azure.com/
 
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
