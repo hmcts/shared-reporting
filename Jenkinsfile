@@ -9,13 +9,14 @@ node {
     }
     stage('Run Query') {    
         def DIVORCE_METRICS_QUERY = /SELECT * from case_data limit 2;/
+        def DB_HOST = /ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com/
 
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'shared-reporting-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 docker.image('jbergknoff/postgresql-client').inside("--entrypoint='' -e PGPASSWORD=${PASSWORD} -v ${WORKSPACE}:/root") { 
-                    sh "psql -f /root/sql/query.sql -o /root/report1.csv -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
-                    sh "psql -f /root/sql/get_divorce_metrics.sql -q -d postgres -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com"
-                    sh "psql -p 5432 -U ${USERNAME} -h ccd-data-store-api-data-store-aat-restore.postgres.database.azure.com -d postgres -q -A -F',' -c '${DIVORCE_METRICS_QUERY}' > /root/divorce.csv "
+                    sh "psql -f /root/sql/query.sql -o /root/report1.csv -q -d postgres -p 5432 -U ${USERNAME} -h ${DB_HOST}"
+                    sh "psql -f /root/sql/get_divorce_metrics.sql -q -d postgres -p 5432 -U ${USERNAME} -h ${DB_HOST}"
+                    sh "psql -p 5432 -U ${USERNAME} -h ${DB_HOST} -d postgres -q -A -F',' -c '${DIVORCE_METRICS_QUERY}' > /root/divorce.csv "
                 }
         }
     }
